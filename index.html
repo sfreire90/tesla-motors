@@ -25,6 +25,9 @@
 	<div class="divPreloader">
 		<img src="img/loading.gif" class="imgLoader img-responsive">
 	</div> 
+	<div class="divPuaaa">
+		<img src="img/puaaa.gif" class="imgLoader img-responsive">
+	</div> 
 
 	
 	<div class="divVistaPrevia">
@@ -51,35 +54,37 @@
 	var teslaView = {
 
 		loader: $(".divPreloader"),
+		loaderPuaaa: $(".divPuaaa"),
 		colores:['blanco', 'cafe', 'gris', 'verde'],
+		extensions: {
+			"amarillo": "png"
+		},
 
 
 		// Funcion para cambiar el color
-		cambiarColor: function(img){
+		cambiarColor: function(img, color){
 
-			var $loader = teslaView.loader;
+			var fadeTime = color !== "amarillo" ? 150: 1550
+			var $loader = color !== "amarillo" 
+				? teslaView.loader
+				: teslaView.loaderPuaaa;
 
 			$loader.fadeIn(150);
 
 			if (img === undefined) {
-				var color = teslaView.colores[0];
-				img = "img/tesla/modelS-"+ color +".jpg";
+				var ext = teslaView.extensions[color] || "jpg"
+				img = "img/tesla/modelS-"+ color + "." + ext;
 			}
 
 			$("<img>", {
 				src: img,
 				class: "img-responsive"
 			})
-				.load(function(){
-
-					$(".divVistaPrevia").find("img").remove();
-					$(this).appendTo('.divVistaPrevia');
-					
-					$loader.fadeOut(150);
-				})
-
-				
-
+			.load(function(){
+				$(".divVistaPrevia").find("img").remove();
+				$(this).appendTo('.divVistaPrevia');
+				$loader.fadeOut(fadeTime);
+			})
 		},
 
 
@@ -107,23 +112,23 @@
 			// Nueva funcion del cambio
 			$("#cmbColor").bind("change",function(){
 				var color = $(this).val();
-				var url = "img/tesla/modelS-"+ color +".jpg";
+				var ext = teslaView.extensions[color] || "jpg"
+				var url = "img/tesla/modelS-"+ color +"." + ext;
 
-				teslaView.cambiarColor(url);
+				teslaView.cambiarColor(url, color);
 
 				//$("#imgCoche").attr("src", url);
 			});
 
 			//cambiar la imagen al iniciar
-			teslaView.cambiarColor();
-
+			teslaView.cambiarColor(undefined, "rojo");
 		}
 
 
 	};
 
 	teslaView.init({
-		colores:['rojo', 'cafe', 'gris', 'verde', 'blanco', 'negro']
+		colores:['rojo', 'cafe', 'gris', 'verde', 'blanco', 'negro', 'amarillo']
 	});
 
 
